@@ -1,0 +1,25 @@
+# --- data: keep repo lightweight ---
+data/raw/
+
+# --- results: track outputs by default, ignore only heavy/ephemeral artifacts ---
+results/cache/
+results/tmp/
+results/**/*.h5
+results/**/*.h5ad
+results/**/*.loom
+results/**/*.rds
+results/**/*.pkl
+results/**/*.npz
+results/**/*.zarr
+results/**/*.parquet
+results/**/*.feather
+results/**/*.mtx
+results/**/*.mtx.gz
+results/**/*.csv.gz
+results/**/*.tsv.gz
+
+# python noise
+__pycache__/
+*.pyc
+.venv/
+

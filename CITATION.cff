@@ -1,0 +1,61 @@
+cff-version: 1.2.0
+message: "If you use this audit framework or adapt the methodology, please cite this repository."
+title: "Lineage Constraint Audit in Single-Cell Embryogenesis"
+type: software
+version: "0.1.0"
+date-released: "2026-01-15"
+
+authors:
+  - family-names: Wells
+    given-names: A. R.
+    affiliation: Dual-Frame Research Group
+    email: arwells.research@proton.me
+
+repository-code: "https://github.com/arwells-research/lineage-constraint-audit"
+abstract: >
+  A constraint-first statistical audit testing whether lineage-associated information
+  remains locally detectable in single-cell expression space after controlling for
+  developmental time and batch effects. The framework emphasizes falsification,
+  stratified null models, explicit GO/NO-GO decision gates, and negative controls,
+  and is designed to assess detectability rather than biological mechanism.
+
+keywords:
+  - single-cell RNA-seq
+  - developmental biology
+  - lineage
+  - statistical audit
+  - null models
+  - constraint-first analysis
+  - C. elegans
+
+license: CC-BY-4.0
+
+references:
+  - type: article
+    title: "A lineage-resolved molecular atlas of C. elegans embryogenesis at single-cell resolution"
+    authors:
+      - family-names: Packer
+        given-names: J. S.
+      - family-names: Zhu
+        given-names: Q.
+      - family-names: Huynh
+        given-names: C.
+      - family-names: Sivaramakrishnan
+        given-names: P.
+      - family-names: Preston
+        given-names: E.
+      - family-names: Dueck
+        given-names: H.
+      - family-names: Stefanik
+        given-names: D.
+      - family-names: Tan
+        given-names: K.
+      - family-names: Trapnell
+        given-names: C.
+      - family-names: Kim
+        given-names: J.
+    journal: Science
+    volume: 365
+    issue: 6459
+    year: 2019
+    doi: 10.1126/science.aax1971
