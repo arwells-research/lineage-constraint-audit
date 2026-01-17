@@ -32,3 +32,5 @@ data/gse153424/**
 !data/gse153424/*.sh
 !data/gse153424/.gitkeep
 # ------------------------------
+# Local-only helper scripts
+organize_gse153424.sh
