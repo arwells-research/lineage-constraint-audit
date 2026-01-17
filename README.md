@@ -1,14 +1,19 @@
-# Lineage Constraint Audit in Single-Cell Embryogenesis
+# Lineage Constraint Audit — Local Detectability Under Stratified Nulls
 
-**A constraint-first statistical audit of lineage detectability in single-cell expression space.**
+> **Repository status:**  
+> This repository contains (i) a completed lineage-detectability audit in *C. elegans* embryogenesis (GSE126954), and  
+> (ii) an active extension testing spatial vs lineage contributions using mouse scRNA-seq and Visium spatial data (GSE153424).  
+>  
+> Only results explicitly labeled as complete should be interpreted as validated findings.  
+> The normative definitions, null construction, and decision criteria are specified in `docs/audit_logic.md`.
 
 ---
 
-## Summary
+## Completed audit summary (C. elegans)
 
-**Result:** After controlling for developmental time and batch, lineage information remains locally detectable in expression space, with constraint strength **30–60% above stratified null expectations** in **validity-positive neighborhoods (~3–11% of local contexts)**.
+**Result (GSE126954):** After controlling for developmental time and batch, lineage information remains locally detectable in expression space, with constraint strength **~30–60% above stratified null expectations** in **validity-positive neighborhoods (~3–11% of local contexts)**.
 
-Validity-positive neighborhoods are those in which multiple founder lineages are locally represented; constraint strength is evaluated **conditionally** on this validity criterion.
+Validity-positive neighborhoods are those in which multiple founder lineages are locally represented; constraint strength is evaluated **conditionally** on this validity criterion (see `docs/audit_logic.md` for formal definitions of validity rate `v`, neighborhood statistic `Tᵢ`, and aggregate strength `A`).
 
 This repository implements a rigorous statistical audit asking a narrowly defined question:
 
@@ -21,7 +26,7 @@ Rather than proposing a predictive model or biological mechanism, this project e
 ## What this project is
 
 - A **statistical audit**, not a predictive or mechanistic model
-- A **constraint-first analysis**, asking what structural regularities *must* exist if lineage matters
+- A **constraint-first analysis**, asking what structural regularities *must* exist if lineage labels remain informative
 - A **falsification-oriented pipeline**, designed to accept negative outcomes as informative
 - A **local neighborhood analysis**, testing detectability where biological constraints are most plausible
 
@@ -42,7 +47,7 @@ No mechanistic interpretation is asserted beyond detectability under controlled 
 
 ## Methodological overview
 
-The analysis proceeds through a sequence of **audit stages**, each with explicit decision gates:
+The analysis proceeds through a sequence of **audit stages**, each with explicit decision gates (specified normatively in `docs/audit_logic.md`):
 
 - **Audit Stage 1: Global validity & strength**
   Does lineage information remain locally detectable at all?
@@ -78,26 +83,42 @@ Results should be interpreted as statements about **residual lineage-associated 
 
 ---
 
-## Known limitations
+## Known limitations (completed audit)
 
 - Lineage and spatial organization are entangled in *C. elegans*; this analysis does not disentangle ancestry-driven from spatially mediated structure.
 - Findings are based on a single large-scale embryonic scRNA-seq dataset.
 - The audit does not identify specific genes or regulatory mechanisms driving constraints.
 - The local-neighborhood framework may miss global coordination effects operating at larger spatial or temporal scales.
 
-These limitations are inherent to the scope of a detectability audit and motivate future extensions rather than undermining the present results.
+These limitations motivate extensions rather than undermining the completed audit.
+
+---
+
+## Active extension: spatial decoupling audit (mouse brain)
+
+An active extension of this audit framework is underway using mouse scRNA-seq and Visium spatial transcriptomics data (GSE153424).
+
+The goal of this extension is **not** to assert new biological conclusions, but to test whether lineage-associated detectability observed in *C. elegans* collapses under null models that explicitly control for spatial proximity.
+
+At present:
+
+- Dataset organization and feasibility checks are in progress
+- No claims or results from the mouse dataset are asserted
+- Proceeding past feasibility requires explicit, mappable clone/lineage labels
+
+See `SESSION_HANDOFF.md` for the authoritative phase plan, decision gates, and implementation constraints.
 
 ---
 
 ## Repository structure
 
     .
-    ├── scripts/        # Core audit pipeline (Audit Stages 1–5A)
-    ├── data/           # Download + checksums (raw files exist locally but are not committed)
+    ├── scripts/        # Core audit pipeline (Stages 1–5A; dataset adapters included)
+    ├── data/           # Download scripts + checksums (raw files exist locally but are not committed)
     │   ├── download_gse126954.sh
     │   ├── GSE126954.sha256
     │   └── raw/        # Local-only (gitignored): GEO supplementary files
-    ├── docs/           # Detailed methodology, null models, and decision criteria
+    ├── docs/           # Normative definitions, null models, and decision criteria
     ├── results/        # Computed statistics, tables, and figures (tracked; large blobs ignored)
     └── README.md
 
@@ -111,16 +132,21 @@ Example figure:
 - Distribution of constraint strength in validity-positive neighborhoods
 - Comparison against stratified null distributions
 
-See `results/figures/` for full audit visualizations.
+See `results/figures/` for completed audit visualizations.
 
 ---
 
-## Dataset
+## Datasets
 
-This analysis is performed on a public single-cell RNA-seq dataset of *C. elegans* embryogenesis:
-
+### Completed audit
+- *C. elegans* embryogenesis scRNA-seq
 - GEO accession: **GSE126954**
 - Includes lineage annotations, developmental timing, batch metadata, and UMI count matrices
+
+### Active extension
+- Mouse brain scRNA-seq and Visium spatial transcriptomics
+- GEO accession: **GSE153424**
+- Included for spatial vs lineage decoupling audit; results pending feasibility
 
 No additional preprocessing beyond documented filters is performed.
 
@@ -130,7 +156,7 @@ No additional preprocessing beyond documented filters is performed.
 
 This audit framework is designed for researchers who want to:
 
-- Test whether lineage information remains detectable in their own scRNA-seq datasets
+- Test whether lineage or clonal information remains detectable in single-cell datasets
 - Implement rigorous stratified null models for local neighborhood statistics
 - Distinguish **detectability claims** from **mechanistic claims**
 - Build constraint-first analyses with explicit decision gates and negative controls
@@ -151,7 +177,7 @@ If the answer had been “no,” that outcome would have been reported with equa
 
 ## Citation
 
-If you use this audit framework or adapt the methodology, please cite this repository and the original dataset:
+If you use this audit framework or adapt the methodology, please cite this repository and the original dataset for the completed audit:
 
 Packer JS, et al. (2019).
 *A lineage-resolved molecular atlas of C. elegans embryogenesis at single-cell resolution.*
