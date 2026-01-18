@@ -12,16 +12,25 @@ Phase-4 additions:
   No new modeling knobs are introduced.
 
 Key outputs:
-  - v_obs: fraction of centers whose neighborhood is "valid" (>=2 founders and >=2 fates)
-  - A_obs: mean G-test statistic across valid centers only
+  - v_obs: fraction of centers whose neighborhood is validity-positive (>=2 founders)
+  - A_obs: mean G-test statistic across validity-positive centers only
   - Null permutations: shuffle founder within strata (timebin or timebin+batch)
-  - p-values: P(null >= observed) with +1 correction
+  - Null reference: 95th percentile of the stratified permutation null
+  - p-values: P(null >= observed) reported for diagnostics only
 
 Controls:
   - control_mode can shuffle fate within strata (negative control)
 
 GO/NO-GO:
-  - GO if (p_A <= 0.01) OR (p_v <= 0.01)
+  Stage-1A: Viability gates
+    - Requires at least one validity-positive neighborhood
+    - Requires >=100 validity-positive centers
+    - Requires successful null permutations
+
+  Stage-1B: Detectability GO if:
+    (v_obs > v_null_95) OR (A_obs > A_null_95)
+
+  Stage-1C: Strength grading is descriptive only and always reported.
 """
 
 from __future__ import annotations
@@ -312,7 +321,9 @@ def neighborhood_validity_and_T(
 def summarize_arr(name: str, x: np.ndarray) -> None:
     print(
         f"{name}: min={float(np.min(x)):.6f}  median={float(np.median(x)):.6f}  "
-        f"p90={float(np.quantile(x, 0.90)):.6f}  max={float(np.max(x)):.6f}"
+        f"p90={float(np.quantile(x, 0.90)):.6f}  "
+        f"p95={float(np.quantile(x, 0.95)):.6f}  "
+        f"max={float(np.max(x)):.6f}"
     )
 
 
@@ -547,6 +558,8 @@ def main() -> int:
 
     # Observed
     valid_obs, T_obs = neighborhood_validity_and_T(neighbor_idx, centers, fate_obs, founder_obs)
+    n_valid_centers = int(valid_obs.sum())
+    n_centers = int(valid_obs.size)    
     v_obs = float(np.mean(valid_obs))
     if np.any(valid_obs):
         A_obs = float(np.mean(T_obs[valid_obs]))
@@ -556,7 +569,7 @@ def main() -> int:
         T_valid_obs = np.array([], dtype=np.float64)
 
     print("=== Observed ===")
-    print(f"Validity rate v_obs: {v_obs:.6f}  (valid centers: {int(valid_obs.sum())}/{valid_obs.size})")
+    print(f"Validity rate v_obs: {v_obs:.6f}  (valid centers: {n_valid_centers}/{n_centers})")
     if np.any(valid_obs):
         print(f"Conditional dependence A_obs = mean(T_i | valid): {A_obs:.6f}")
         summarize_arr("T_i (valid only)", T_valid_obs)
@@ -564,10 +577,18 @@ def main() -> int:
         print("No valid neighborhoods under the validity rule; NO-GO by design.")
         print()
         print("=== GO / NO-GO ===")
-        print("Decision: NO-GO (no valid neighborhoods)")
+        print("Decision: NO-GO (viability V1 failed: no valid neighborhoods)")
         print()
         return 0
     print()
+
+    # Stage-1A viability gate V2 (normative; see docs/audit_logic.md)
+    if n_valid_centers < 100:
+        print("=== GO / NO-GO ===")
+        print("Decision: NO-GO (viability V2 failed: n_valid_centers < 100)")
+        print(f"n_valid_centers={n_valid_centers} (required >= 100)")
+        print()
+        return 0
 
     # Null: shuffle founder within selected strata
     print("=== Global null (shuffle founder within strata) ===")

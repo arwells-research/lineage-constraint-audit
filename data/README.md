@@ -16,6 +16,13 @@ Normative audit logic and decision gates are specified in `docs/audit_logic.md`.
 
 This dataset supports the **completed lineage detectability audit**.
 
+Phases applied:
+  - **Phase-D:** founder-conditioned developmental dispersion (evaluated; NO-GO)
+  - **Phase-D2:** pairwise founder neighborhood overlap (evaluated; NO-GO)
+
+Phase-E (founder-conditioned admissibility) is implemented and validated
+only for the **LARRY dataset** and is not applied to GSE126954.
+
 Only the supplementary processed matrices required by the audit pipeline
 are used; no FASTQs or raw sequencing data are required.
 
@@ -83,71 +90,5 @@ Canonical command (from repo root):
       --knn_k 20 --svd_components 50 --max_centers 5000 \
       --global_perms 1000 --seed 0
 
----
 
-## Active extension dataset (no results asserted)
 
-### GSE153424 — Mouse brain scRNA-seq + Visium spatial transcriptomics
-
-This dataset is included for an **active extension** of the audit framework
-testing whether lineage / clonal detectability collapses under **explicit
-spatial control**.
-
-At present, GSE153424 is used **only for feasibility and viability checks**.
-No biological or statistical claims from this dataset are asserted.
-
----
-
-### Data policy (GSE153424)
-
-The following directories are **local-only** and must remain gitignored:
-
-- `data/gse153424/raw/`   — downloaded GEO / SRA archives
-- `data/gse153424/work/`  — extracted matrices, spatial files, derived tables
-- `data/gse153424/results/` — intermediate or exploratory outputs
-
-Only **small, human-authored files** (scripts, READMEs, checksums) may be
-committed under `data/gse153424/`.
-
----
-
-### Expected local layout (GSE153424)
-
-After local download and extraction, a typical working tree will look like:
-
-    data/gse153424/
-      raw/
-        GSE153424_family.soft.gz
-        GSE153424_family.xml.tgz
-        scRNA/*.tar.gz
-        spatial/*.tar.gz
-      work/
-        extracted/
-          scRNA/<GSM...>/
-          spatial/<GSM...>/
-        derived/
-        logs/
-
-Exact contents vary by GSM and modality.
-
----
-
-### Current status
-
-- Dataset organization scripts exist (see repo root).
-- Clone / lineage label availability is **not yet confirmed**.
-- Proceeding beyond feasibility requires explicit, mappable clone labels
-  aligned to scRNA cells and/or Visium spots.
-
-See `SESSION_HANDOFF.md` for the authoritative phase plan and GO / NO-GO gates
-for this dataset.
-
----
-
-## Important reminders
-
-- **Do not commit raw or extracted data.**
-- **Do not infer results from GSE153424 until feasibility is explicitly GO.**
-- **Do not modify audit logic to accommodate a dataset.**
-
-Negative outcomes (NO-GO) are valid and expected under this framework.

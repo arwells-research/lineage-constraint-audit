@@ -99,27 +99,96 @@ This destroys:
 
 ## Audit stages
 
-### Audit Stage 1: Global validity & strength
+## Audit Stage 1 — Detectability and Measurement Viability
 
-Tests whether lineage information is detectable at all.
+### Purpose
 
-**GO criteria** (at least one must be satisfied):
+Establish whether lineage information is locally detectable in expression space,
+given the defined validity criterion and stratified null.
 
-1. Validity rate:
-   - v_obs > v_null_95
-2. Constraint strength:
-   - A_obs > A_null_95
+This stage separates:
 
-**Quantitative thresholds:**
+1) whether the statistic is meaningful  
+2) whether lineage detectability is present  
+3) how strong the signal is  
 
-- Minimum effect size:
-  - A_obs / median(A_null) ≥ 1.2 (≥20% uplift)
-- Minimum validity rate:
-  - v_obs ≥ 0.03 (≥3% of neighborhoods)
+---
 
-**NO-GO outcome:**
-If neither criterion is satisfied, conclude that lineage information is not locally
-detectable under these controls. Subsequent stages are not performed.
+### Stage-1A: Viability Gates (binary)
+
+These ensure the measurement can be interpreted.
+
+A run is viability-GO if all are satisfied:
+
+Gate | Definition | Purpose
+---- | ---------- | -------
+V1 | At least one neighborhood meets the validity rule | Ensures founder mixing exists at all
+V2 | n_valid_centers ≥ 100 | Ensures statistical estimation is meaningful
+   | (empirical boundary: if v_obs ≈ 0.03–0.04, require max_centers ≥ 5000) |
+V3 | Stratified null permutations completed successfully | Ensures comparison against null is valid
+
+If any viability gate fails → **NO-GO by design.**
+
+No detectability or strength statements are made.
+
+---
+
+### Stage-1B: Detectability Test (binary)
+
+Performed only if Stage-1A is satisfied.
+
+Lineage is considered detectability-GO if either holds:
+
+1) Validity detectability  
+ v_obs > v_null_95  
+
+2) Strength detectability  
+ A_obs > A_null_95  
+
+If neither holds → **detectability NO-GO.**
+
+Subsequent audit stages are not performed.
+
+---
+
+### Stage-1C: Strength Grading (reported, not gated)
+
+These quantify the strength of the detected constraint.
+
+They are descriptive only and never determine GO/NO-GO.
+
+Metric | Meaning
+------ | -------
+Uplift ratio = A_obs / median(A_null) | Effect size relative to null
+Validity rate v_obs | Fraction of neighborhoods where founder mixing exists
+Share concentration (if computed) | Whether a single founder dominates constraint strength
+
+These values must always be reported, regardless of GO/NO-GO outcome.
+
+---
+
+### Interpretation
+
+Outcome | Meaning
+------- | -------
+Viability NO-GO | Cannot evaluate detectability; data does not support the audit stage
+Detectability NO-GO | No lineage-associated structure detectable beyond stratified null
+Detectability GO | Lineage-associated structure is statistically detectable
+Strength grading | Quantifies effect magnitude, not its validity
+
+---
+
+### Design Rationale
+
+Detectability is a binary scientific question.  
+Viability is a data-quality prerequisite.  
+Strength is a continuous measure and should never stifle valid science.
+
+This ensures that:
+
+- borderline effects are preserved  
+- only non-interpretable analyses are rejected  
+- subsequent robustness and control stages are justified by detectability  
 
 ---
 
@@ -187,6 +256,56 @@ Used to assess whether detected signal is:
 
 - dominated by a single lineage
 - or distributed across multiple founders
+
+---
+
+## Audit Stage D — Founder-conditioned admissibility dispersion
+This stage is **descriptive only** and does not alter Stage-1 or Stage-2 GO / NO-GO decisions.
+
+**Purpose:**  
+Test whether different founder lineages occupy distinct admissible developmental
+transition regions, rather than merely contributing unequally.
+
+This extends Stage-1 detectability by examining founder-specific admissibility structure.
+
+**Method:**  
+Within validity-positive neighborhoods, compute developmental time dispersion
+(entropy or variance) conditioned on founder identity.  
+Compare against the same stratified founder-shuffle null used in Stage-1.
+
+**Interpretation:**
+
+Dataset | Founders | Outcome
+------- | -------- | -------
+**LARRY (mouse)** | 2 | **GO** — founders show distinct dispersion structure (p ≈ 0.001)
+**GSE126954 (worm)** | 5 | **NO-GO (detectability)** — no dispersion signal beyond stratified null
+
+A NO-GO at this stage indicates that founder-specific dispersion cannot be
+distinguished from developmental time or batch effects alone.
+
+---
+
+## Audit Stage D2 — Pairwise founder neighborhood overlap
+This stage is **descriptive only** and does not alter Stage-1 or Stage-2 GO / NO-GO decisions.
+
+**Purpose:**  
+Test whether certain founder pairs preferentially share admissibility space in
+local expression neighborhoods.
+
+**Method:**  
+Measure the frequency with which founder pairs co-occur within validity-positive
+neighborhoods.  
+Evaluate against the same stratified founder-shuffle null as Stage-1.
+
+**Interpretation:**
+
+Dataset | Outcome
+------- | -------
+**LARRY (mouse)** | **GO** — founder pairs partition local admissibility space
+**GSE126954 (worm)** | **NO-GO (detectability)** — founder pair overlap matches stratified null
+
+A NO-GO implies that founder adjacency on the lineage tree does not yield
+measurable overlap beyond time and batch controls.
 
 ---
 
@@ -296,3 +415,6 @@ Negative results are informative.
 
 All decision criteria are defined prior to evaluation.
 Post-hoc rationalization is explicitly disallowed.
+
+Phase-D, Phase-D2, and Phase-E provide additional structural diagnostics
+and do not constitute independent evidence for or against lineage detectability.

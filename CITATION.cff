@@ -12,21 +12,26 @@ authors:
     email: arwells.research@proton.me
 
 repository-code: "https://github.com/arwells-research/lineage-constraint-audit"
+
 abstract: >
-  A constraint-first statistical audit testing whether lineage-associated information
-  remains locally detectable in single-cell expression space after controlling for
-  developmental time and batch effects. The framework emphasizes falsification,
+  A constraint-first statistical audit testing whether lineage-associated or clonal
+  information remains locally detectable in single-cell expression space after controlling
+  for developmental time and batch effects. The framework emphasizes falsification,
   stratified null models, explicit GO/NO-GO decision gates, and negative controls,
   and is designed to assess detectability rather than biological mechanism.
+  Current validated datasets include the C. elegans embryonic atlas (GSE126954)
+  and the LARRY hematopoietic clonal tracing dataset (Weinreb et al., 2020).
 
 keywords:
   - single-cell RNA-seq
   - developmental biology
   - lineage
+  - clonal analysis
   - statistical audit
   - null models
   - constraint-first analysis
   - C. elegans
+  - hematopoiesis
 
 license: CC-BY-4.0
 
@@ -59,3 +64,20 @@ references:
     issue: 6459
     year: 2019
     doi: 10.1126/science.aax1971
+
+  - type: article
+    title: "Fundamental limits on dynamic inference from single-cell snapshots"
+    authors:
+      - family-names: Weinreb
+        given-names: C.
+      - family-names: Rodriguez-Fraticelli
+        given-names: A. E.
+      - family-names: Camargo
+        given-names: F. D.
+      - family-names: Klein
+        given-names: A. M.
+    journal: Science
+    volume: 367
+    issue: 6477
+    year: 2020
+    doi: 10.1126/science.aaw3381

@@ -34,3 +34,18 @@ data/gse153424/**
 # ------------------------------
 # Local-only helper scripts
 organize_gse153424.sh
+
+# --- local outputs / generated artifacts ---
+results/
+*.log
+*.stdout.txt
+*.stderr.txt
+/tmp/
+
+# --- local-only datasets ---
+data/raw/
+data/larry/
+data/gse153424/raw/
+data/gse153424/work/
+data/gse153424/results/
+
