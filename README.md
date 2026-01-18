@@ -180,12 +180,12 @@ These limitations motivate future extensions rather than undermine the present r
 
 ## Repository structure
 
-.
-├── scripts/        # Core audit pipeline (Audit Stages 1–5A)
-├── data/           # Download + checksums (raw files exist locally but are not committed)
-├── docs/           # Detailed methodology, null models, and decision criteria
-├── results/        # Computed statistics, tables, and figures
-└── README.md
+    .
+    ├── scripts/        # Core audit pipeline (Audit Stages 1–5A)
+    ├── data/           # Download + checksums (raw files exist locally but are not committed)
+    ├── docs/           # Detailed methodology, null models, and decision criteria
+    ├── results/        # Computed statistics, tables, and figures
+    └── README.md
 
 ---
 
@@ -232,5 +232,6 @@ Packer JS et al. (2019).
 
 Weinreb C et al. (2020).  
 *Lineage tracing on transcriptional landscapes links state to fate.* Science.
+
 
 A `CITATION.cff` file is provided for convenience.
